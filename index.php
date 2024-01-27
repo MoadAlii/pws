@@ -4,8 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="20">
-  <link rel="shortcut icon" href="/assets/images/logow.png" type="image/png">
+  <link rel="shortcut icon" href="/assets/images/logow.png" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.csshttps://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -21,52 +20,13 @@
   </style>
 
   <?php
-  include('api.php');
+  include('data.php');
 
   global $api_key, $station_id;
 
-  if (isset($response_data_current) && $response_data_current !== null) {
-    $currentTemperature = $response_data_current['observations'][0]['metric']['temp'];
-    $feelsLikeTemperature = $response_data_current['observations'][0]['metric']['heatIndex'];
-    $humidity = $response_data_current['observations'][0]['humidity'];
-    $winddir = $response_data_current['observations'][0]['winddir'];
-    $windSpeed = $response_data_current['observations'][0]['metric']['windSpeed'];
-    $windGust = $response_data_current['observations'][0]['metric']['windGust'];
-    $rainRate = $response_data_current['observations'][0]['metric']['precipRate'];
-    $rainToday = $response_data_current['observations'][0]['metric']['precipTotal'];
-    $pressure = $response_data_current['observations'][0]['metric']['pressure'];
 
 
-    // Get the index of the last day
-    $lastDayIndex = count($response_data_7days['summaries']) - 1;
 
-
-    // Get the data for the last day
-    $lastDayData = $response_data_7days['summaries'][$lastDayIndex];
-
-    // Access the temperature values for the last day
-    $lastDayHighTemp = $lastDayData['metric']['tempHigh'];
-    $lastDayLowTemp = $lastDayData['metric']['tempLow'];
-    $highWindSpeed = $lastDayData['metric']['windspeedHigh'];
-    $highGustSpeed = $lastDayData['metric']['windgustHigh'];
-    $avgWindSpeed = $lastDayData['metric']['windspeedAvg'];
-    $pressureMax = $lastDayData['metric']['pressureMax'];
-    $pressureMin = $lastDayData['metric']['pressureMin'];
-
-    // all data - rain - month
-
-
-  } else {
-
-    $currentTemperature = 'N/A';
-    $feelsLikeTemperature = 'N/A';
-    $humidity = 'N/A';
-    $windSpeed = 'N/A';
-    $windGust = 'N/A';
-    $winddir = 'N/A';
-    $rainRate = 'N/A';
-    $rainToday = 'N/A';
-  }
   ?>
 
 
@@ -112,7 +72,7 @@
     </div>
 
 
-    <div class="main-container ">
+    <div style="width: 70% !important;" class="main-container">
       <div class="data-tabel">
 
         <div class="rain-data">
@@ -127,7 +87,17 @@
           <p class="rain-p2"><?php echo $lastDayLowTemp  ?> °</p>
         </div>
 
+        
         <div class="v-line"></div>
+
+        <div class="rain-data">
+          <p class="rain-p">High Rain Rate </p>
+          <p class="rain-p2"><?php echo $HighRainRate  ?> mm/h</p>
+        </div>
+
+        <div class="v-line"></div>
+
+        
 
         <div class="rain-data">
           <p class="rain-p">High Wind Speed</p>

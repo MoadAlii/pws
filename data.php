@@ -1,5 +1,21 @@
 <?php
-$api_key = '23999150bfda4c77999150bfda4c771e';
+
+// Database configuration
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "pws";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+
+$api_key = '3db0ab40eef446bbb0ab40eef416bbb5';
 $station_id = 'IALJAM4';
 
 $api_url_current = "https://api.weather.com/v2/pws/observations/current?stationId=$station_id&format=json&units=m&apiKey=$api_key&numericPrecision=decimal";
@@ -20,7 +36,75 @@ $response_data_7days = json_decode($json_data_7days, true);
 
 
 
-// Initialize date range for daily data
+
+
+
+if (isset($response_data_current) && $response_data_current !== null) {
+    $currentTemperature = $response_data_current['observations'][0]['metric']['temp'];
+    $feelsLikeTemperature = $response_data_current['observations'][0]['metric']['windChill'];
+    $humidity = $response_data_current['observations'][0]['humidity'];
+    $winddir = $response_data_current['observations'][0]['winddir'];
+    $windSpeed = $response_data_current['observations'][0]['metric']['windSpeed'];
+    $windGust = $response_data_current['observations'][0]['metric']['windGust'];
+    $rainRate = $response_data_current['observations'][0]['metric']['precipRate'];
+    $rainToday = $response_data_current['observations'][0]['metric']['precipTotal'];
+    $pressure = $response_data_current['observations'][0]['metric']['pressure'];
+
+
+    // Get the index of the last day
+    $lastDayIndex = count($response_data_7days['summaries']) - 1;
+
+
+    // Get the data for the last day
+    $lastDayData = $response_data_7days['summaries'][$lastDayIndex];
+
+    // Access the temperature values for the last day
+    $lastDayHighTemp = $lastDayData['metric']['tempHigh'];
+    $lastDayLowTemp = $lastDayData['metric']['tempLow'];
+    $highWindSpeed = $lastDayData['metric']['windspeedHigh'];
+    $highGustSpeed = $lastDayData['metric']['windgustHigh'];
+    $avgWindSpeed = $lastDayData['metric']['windspeedAvg'];
+    $pressureMax = $lastDayData['metric']['pressureMax'];
+    $pressureMin = $lastDayData['metric']['pressureMin'];
+
+    // all data - rain - month
+
+
+  } else {
+
+    $currentTemperature = 'N/A';
+    $feelsLikeTemperature = 'N/A';
+    $humidity = 'N/A';
+    $windSpeed = 'N/A';
+    $windGust = 'N/A';
+    $winddir = 'N/A';
+    $rainRate = 'N/A';
+    $rainToday = 'N/A';
+    $lastDayHighTemp = 'N/A';
+    $lastDayLowTemp = 'N/A';
+    $highWindSpeed = 'N/A';
+    $avgWindSpeed = 'N/A';
+    $pressureMax = 'N/A';
+    $pressureMin = 'N/A';
+
+
+  }
+
+
+  $sql = "INSERT INTO weatherData (precipRate)
+  VALUES ($rainRate)";
+  
+  if ($conn->query($sql) === TRUE) {
+      echo "";
+  } else {
+      echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+  
+  $conn->close();
+  
+
+
+  // Initialize date range for daily data
 $start_date = new DateTime("2024-01-09");
 $today_date = new DateTime(); 
 $end_date = ($today_date < new DateTime("2024-01-31")) ? $today_date : new DateTime("2024-01-31"); // Set end date to today's date or January 31, 2024, whichever is earlier
@@ -54,6 +138,7 @@ while ($start_date <= $end_date) {
 }
 
 
+  
 // Initialize date range for daily data
 $start_date = new DateTime("2024-01-09");
 $today_date = new DateTime(); 
@@ -87,5 +172,37 @@ while ($start_date <= $end_date) {
   $start_date->modify('+1 day');
 }
 
+
+
+
+  // Database configuration
+  $servername = "localhost";
+  $username = "root";
+  $password = "";
+  $dbname = "pws";
+  
+  // Create connection
+  $conn = new mysqli($servername, $username, $password, $dbname);
+  
+  // Check connection
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+  
+  $sql = "SELECT MAX(precipRate) AS maxRainRate FROM weatherdata";
+  $result = $conn->query($sql);
+  
+  
+  if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+      $HighRainRate = $row['maxRainRate'];
+   
+
+      
+      
+    }
+  }
+  $conn->close();
 
 ?>
